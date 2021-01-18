@@ -1,0 +1,112 @@
+
+<div class="container" id="container">
+  <h1 style="text-align: center;">Tasks APP</h1><br>
+    <div class="row">
+        <div class="col-sm-6" ><div class="card">
+            <div class="card-header">
+                <div class="dropdown">
+                    Choose a User: 
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                      User List
+                    </button>
+                    <div class="dropdown-menu">
+                        <ng-container *ngFor="let per of Person">
+                            <a class="dropdown-item" (click)="ChangePerson(per)">{{per.name}}</a>
+                        </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="card-body">
+                <ng-container *ngIf="ActualPerson; else not_person">
+                    <h3>Create New Task</h3>
+                    <form [formGroup]="tasksForm" (ngSubmit)="CreateTask()">
+                        <div class="form-group">
+                            <label>Title:</label>
+                            <input type="text" class="form-control" formControlName="title">
+                          </div>
+                          <div class="form-group">
+                            <label>Description:</label>
+                            <input type="text" class="form-control" formControlName="description">
+                          </div>
+                          <input type="submit" value="SAVE" class="btn btn-primary" [disabled]="tasksForm.invalid">
+                    </form>
+                </ng-container>
+                <ng-template #not_person>
+                  <div style="text-align: center;">
+                    <img src="https://i.pinimg.com/originals/76/47/9d/76479dd91dc55c2768ddccfc30a4fbf5.png">
+                    <br><br>
+                    <h5>Hey! Choose an user for Tasks Functions.</h5>
+                  </div>
+                </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6" >
+            <ng-container *ngIf="ActualPerson">
+                <div class="card">
+                    <div class="card-header">{{ActualPerson.name}} Tasks List</div>
+                    <div class="card-body">
+                        <ng-container *ngIf="tasks.length > 0; else not_tasks">
+                            <table class="table table-striped">
+                                <thead>
+                                  <tr>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let task of tasks">
+                                    <td>{{task.title}}</td>
+                                    <td>{{task.description}}</td>
+                                    <td>{{task.date}}</td>
+                                    <td>
+                                      <div class="btn-group">
+                                        <button type="button" class="btn btn-success" (click)="TaskToUpdate(task)" data-toggle="modal" data-target="#updateModal">Update</button>
+                                        <button type="button" class="btn btn-danger" (click)="DeleteTask(task.taskID)">Delete</button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                        </ng-container>
+                        <ng-template #not_tasks>
+                          <div>
+                            Ups! Looks like you dont have any task.
+                          </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+
+<!-- UPDATE MODAL -->
+<div class="modal" id="updateModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Update Task</h4>
+        <button type="button" class="close" data-dismiss="modal" id="close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="updateForm" (ngSubmit)="UpdateTask()">
+            <div class="form-group">
+                <label>Title:</label>
+                <input type="text" class="form-control" formControlName="title">
+              </div>
+              <div class="form-group">
+                <label>Description:</label>
+                <input type="text" class="form-control" formControlName="description">
+              </div>
+              <br>
+              <input type="submit" value="SAVE" class="btn btn-primary">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- UPDATE MODAL -->
